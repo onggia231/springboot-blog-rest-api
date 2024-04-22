@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringbootBlogRestApiApplication {
 
 	public static void main(String[] args) {
-		System.out.println("sdsd");
+		SpringApplication.run(SpringbootBlogRestApiApplication.class, args);
 	}
 
 }
