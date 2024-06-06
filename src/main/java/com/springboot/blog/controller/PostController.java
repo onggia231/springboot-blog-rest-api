@@ -6,8 +6,12 @@ import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.AppConstants;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(("/api/posts"))
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostController {
-  private PostService postService;
 
-  public PostController(PostService postService) {
-    this.postService = postService;
-  }
+  PostService postService;
 
+  @PreAuthorize("hasRole('ADMIN')")
   // create blog post rest api
   @PostMapping
   public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
@@ -56,6 +60,7 @@ public class PostController {
     return ResponseEntity.ok(postService.getPostById(id));
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   // update post by id rest api
   @PutMapping("/{id}")
   public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto,
@@ -64,6 +69,7 @@ public class PostController {
     return new ResponseEntity<>(postResponse, HttpStatus.OK);
   }
 
+  @PreAuthorize("hasRole('ADMIN')")
   // delete post rest api
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deletePost(@PathVariable(name = "id") long id){
